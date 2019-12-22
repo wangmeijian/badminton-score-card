@@ -1,19 +1,16 @@
+import callFunction from '../../unit/callFunction';
+
 const app = getApp()
 
 Page({
   data: {
-  	openid: '',
-    loading: false,
     history: [],
     startX: 0,
     deleteBtnWidth: 68
   },
 
   onLoad: function() {
-    this.setData({
-      loading: false,
-      openid: wx.getStorageSync('openid')
-    })
+    wx.hideLoading();
     this.getHistory();
   },
 
@@ -54,26 +51,16 @@ Page({
   },
 
   getHistory(){
-    this.setData({
-      loading: true
-    })
-    wx.cloud.init()
-    wx.cloud.callFunction({
-      name: 'curd',
-      data: {
-        action: 'retriveAll',
-        openid: this.data.openid
-      },
-      complete: res => {
-        this.setData({
-          loading: false,
-          history: res.result.data.map((item, index) => {
-            item.url = `/pages/score/index?game_id=${item._id}`;
-            item.moveX = 0;
-            return item;
-          })
+    callFunction({
+      name: 'getHistory'
+    }).then(res => {
+      this.setData({
+        history: res.data.map(item => {
+          item.url = `/pages/score/index?game_id=${item._id}`;
+          item.moveX = 0;
+          return item;
         })
-      }
+      })
     })
   },
   removeGame(e){
@@ -81,24 +68,24 @@ Page({
 
     this.data.history[index].moveX = 0;
     this.setData({
-      loading: true,
       history: this.data.history
     })
 
-    wx.cloud.init()
-    wx.cloud.callFunction({
-      name: 'curd',
+    callFunction({
+      name: 'remove',
       data: {
-        action: 'delete',
         game_id: this.data.history[index]._id
-      },
-      complete: res => {
-        this.data.history.splice(index, 1);
-        this.setData({
-          loading: false,
-          history: this.data.history
-        })
       }
+    }).then(res => {
+      this.data.history.splice(index, 1);
+      this.setData({
+        history: this.data.history
+      })
+      wx.showToast({
+        title: '删除成功',
+        icon: 'success',
+        duration: 2000
+      })
     })
   }
 

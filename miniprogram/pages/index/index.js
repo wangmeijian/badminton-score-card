@@ -1,19 +1,39 @@
+import callFunction from '../../unit/callFunction';
+
 const app = getApp()
+
+wx.cloud.init()
 
 Page({
   data: {
     loading: false,
-    openid: '',
     game_title: '',
     red_name: '',
     blue_name: ''
   },
 
-  onLoad: async function(){
-    this.setData({
-      loading: false
-    })
-    this.getUserInfo();
+  onLoad: function(option){
+    wx.hideLoading();
+    if(option.page){
+      switch(option.page){
+        case 'score':
+          wx.navigateTo({
+            url: `/pages/score/index?game_id=${option.game_id}`
+          })
+          break;
+        case 'tournament':
+          wx.navigateTo({
+            url: `/pages/tournament/index`
+          })
+          break;
+      }
+    }
+  },
+
+  onShareAppMessage(){
+    return {
+      title: '羽毛球比赛在线记分'
+    }
   },
 
   setGame(e){
@@ -22,56 +42,39 @@ Page({
     })
   },
 
-  getUserInfo: async function(){
-    this.setData({
-      loading: true
-    })
-    wx.cloud.init()
-    await wx.cloud.callFunction({
-      name: 'login',
-      complete: res => {
-        this.setData({
-          openid: res.result.openid,
-          loading: false
-        })
-        wx.setStorageSync('openid', res.result.openid);
-      }
-    })
-  },
-
   createGame: async function(){
-    const { loading, game_title, red_name, blue_name, openid } = this.data;
+    const { game_title, red_name, blue_name } = this.data;
 
-    if(loading)return;
+    if( red_name.trim().length == 0 || blue_name.trim().length == 0 ){
+      wx.showToast({
+        title: '请输入队伍名称',
+        icon: 'none',
+        duration: 2000
+      })
+      return false;
+    }
     this.setData({
       loading: true
     })
-    // 避免创建没有create_user_id的比赛
-    if(openid == ''){
-      await this.getUserInfo();
-    }
-    wx.cloud.init()
-    await wx.cloud.callFunction({
-      name: 'curd',
+    
+    await callFunction({
+      name: 'create',
       data: {
-        action: 'create',
         game: {
-          openid: openid,
-          game_title: game_title.trim() || '羽毛球大赛',
-          red_name: red_name.trim() || '红队',
-          blue_name: blue_name.trim() || '蓝队'
+          game_title: game_title.trim(),
+          red_name: red_name.trim(),
+          blue_name: blue_name.trim()
         }
       }
     }).then(res => {
       this.setData({
-        loading: false,
         game_title: '',
         red_name: '',
-        blue_name: ''
+        blue_name: '',
+        loading: false
       })
-      
       wx.navigateTo({
-        url: `/pages/score/index?game_id=${res.result['_id']}`
+        url: `/pages/score/index?game_id=${res['_id']}`
       })
     }).catch(err => {
       this.setData({

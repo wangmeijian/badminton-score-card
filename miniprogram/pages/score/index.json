@@ -1,4 +1,5 @@
 {
-  "navigationBarTitleText": "羽毛球比赛记分牌",
-  "pageOrientation": "landscape"
+  "navigationBarTitleText": "羽毛球记分工具",
+  "pageOrientation": "landscape",
+  "disableScroll": true
 }

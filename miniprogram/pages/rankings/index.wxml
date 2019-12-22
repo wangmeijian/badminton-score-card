@@ -1,0 +1,40 @@
+<view class="container">
+  <view class="motion-type">
+    <view class="motion-type-item {{type == 'ms' ? 'active' : ''}}" data-type="ms" bindtap="getRankings">男单</view>
+    <view class="motion-type-item {{type == 'ws' ? 'active' : ''}}" data-type="ws" bindtap="getRankings">女单</view>
+    <view class="motion-type-item {{type == 'md' ? 'active' : ''}}" data-type="md" bindtap="getRankings">男双</view>
+    <view class="motion-type-item {{type == 'wd' ? 'active' : ''}}" data-type="wd" bindtap="getRankings">女双</view>
+    <view class="motion-type-item {{type == 'mx' ? 'active' : ''}}" data-type="mx" bindtap="getRankings">混双</view>
+  </view>
+  <div class="game-list">
+    <view class="rank-table">
+      <view class='thead'>
+        <view class='tr'>
+          <view class='th'>排名</view>
+          <view class='th name'>姓名</view>
+          <view class='th'>国家</view>
+          <view class='th'>积分</view>
+        </view>
+      </view>
+      <view class='tbody'>
+        <view wx:for="{{rankings}}" wx:for-index="index" wx:for-item="item" wx:key="item._id" class='tr'>
+          <view class='td rank'>
+            <view class="rank-view">{{index+1}}</view>
+          </view>
+          <view class='td name'>
+            <view>{{item.cn_name}}</view>
+            <view wx:if="{{item.cn_name2.length}}">{{item.cn_name2}}</view>
+          </view>
+          <view class='td country'>
+            <view>{{item.cn_country}}</view>
+            <view wx:if="{{item.cn_country2.length}}">{{item.cn_country2}}</view>
+          </view>
+          <view class='td integral'>
+            <view class='integral-view'>{{item.integral}}</view>
+          </view>
+        </view>
+      </view>
+    </view> 
+    <view class="update-week" wx:if="{{rankings.length}}">{{year}}年第{{week}}周（{{update_time}}）</view>
+  </div>
+</view>

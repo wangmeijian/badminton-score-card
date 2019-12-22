@@ -1,0 +1,9 @@
+{
+  "triggers": [
+    {
+      "name": "updateWSRankings",
+      "type": "timer",
+      "config": "0 11 0 * * * *"
+    }
+  ]
+}

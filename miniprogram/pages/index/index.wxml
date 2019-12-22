@@ -3,6 +3,7 @@
   <div class="game-form">
     <view class="game-theme">
       <image class="bg-img" src="/images/index-bg.png" mode="widthFix" ></image>
+      <image class="bg-img white-line" src="/images/ball-park.png" mode="widthFix" ></image>
     </view>
     <view class="create-area">
       <view class="section">
@@ -13,13 +14,12 @@
           bindinput="setGame" 
           maxlength="30" 
           placeholder="比赛名称" 
-          auto-focus 
           data-field="game_title" />
       </view>
       <view class="section">
         <input 
           type="text" 
-          class="game-attr" 
+          class="game-attr game-attr-required" 
           value="{{red_name}}" 
           bindinput="setGame" 
           maxlength="30" 
@@ -29,7 +29,7 @@
       <view class="section">
         <input 
           type="text" 
-          class="game-attr" 
+          class="game-attr game-attr-required" 
           value="{{blue_name}}" 
           bindinput="setGame" 
           maxlength="30" 
@@ -37,11 +37,8 @@
           data-field="blue_name" />
       </view>
       
-      <button class="handle-btn" type="primary" bindtap="createGame">创建比赛</button>
+      <button class="handle-btn" type="primary" bindtap="createGame" loading="{{loading}}" >开始比赛</button>
       <button class="handle-btn" bindtap="navigateToHistory">历史比赛</button> 
     </view>   
-    <loading wx:if="{{loading}}" >
-      加载中...
-    </loading>
   </div>
 </view>

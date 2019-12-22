@@ -1,0 +1,9 @@
+{
+  "triggers": [
+    {
+      "name": "updateMXRankings",
+      "type": "timer",
+      "config": "0 15 0 * * * *"
+    }
+  ]
+}
